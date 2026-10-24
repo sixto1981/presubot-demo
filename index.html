@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', system_ui, sans-serif; }
+    body { font-family: 'Inter', system-ui, sans-serif; }
     .demo-badge { background: #FEF3C7; color: #92400E; }
   </style>
 </head>
@@ -244,6 +244,13 @@
     // Demo logic
     let currentSolicitud = null;
 
+    // Escapa texto no confiable antes de insertarlo en HTML.
+    function escapeHTML(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[char]);
+    }
+
     document.getElementById('solicitudForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const data = {
@@ -283,11 +290,11 @@
       }
 
       let html = `
-        <div><strong>Tipo:</strong> ${data.tipo}</div>
-        <div><strong>Localidad:</strong> ${data.localidad}</div>
-        <div><strong>Descripción:</strong> ${data.descripcion}</div>
-        ${data.medidas ? `<div><strong>Medidas:</strong> ${data.medidas}</div>` : ''}
-        <div><strong>Contacto:</strong> ${data.nombre} · ${data.contacto}</div>
+        <div><strong>Tipo:</strong> ${escapeHTML(data.tipo)}</div>
+        <div><strong>Localidad:</strong> ${escapeHTML(data.localidad)}</div>
+        <div><strong>Descripción:</strong> ${escapeHTML(data.descripcion)}</div>
+        ${data.medidas ? `<div><strong>Medidas:</strong> ${escapeHTML(data.medidas)}</div>` : ''}
+        <div><strong>Contacto:</strong> ${escapeHTML(data.nombre)} · ${escapeHTML(data.contacto)}</div>
         <div class="text-xs text-gray-500 mt-2">Datos ficticios de demostración. No se ha enviado nada.</div>
       `;
       document.getElementById('resumenContenido').innerHTML = html;
@@ -321,30 +328,49 @@
       const lista = JSON.parse(localStorage.getItem('presubot_solicitudes') || '[]');
       const container = document.getElementById('panelLista');
       const vacio = document.getElementById('panelVacio');
-      if (lista.length === 0) {
-        container.innerHTML = '';
+      container.replaceChildren();
+      if (!Array.isArray(lista) || lista.length === 0) {
         vacio.classList.remove('hidden');
         return;
       }
       vacio.classList.add('hidden');
-      container.innerHTML = lista.map(s => `
-        <div class="border rounded-lg p-4 bg-gray-50">
-          <div class="flex justify-between items-start">
-            <div>
-              <div class="font-medium">${s.tipo} · ${s.localidad}</div>
-              <div class="text-sm text-gray-600">${s.nombre} · ${s.contacto}</div>
-              <div class="text-sm mt-1">${s.descripcion.substring(0, 120)}${s.descripcion.length > 120 ? '...' : ''}</div>
-            </div>
-            <select onchange="cambiarEstado(${s.id}, this.value)" class="text-sm border rounded px-2 py-1">
-              ${['nueva','pendiente de información','contactar','visita pendiente','presupuesto enviado','ganada','perdida'].map(e => 
-                `<option ${e === s.estado ? 'selected' : ''}>${e}</option>`).join('')}
-            </select>
-          </div>
-          <div class="mt-2 text-xs text-gray-500">${new Date(s.fecha).toLocaleString('es-ES')}</div>
-        </div>
-      `).join('');
+      const estados = ['nueva','pendiente de información','contactar','visita pendiente','presupuesto enviado','ganada','perdida'];
+      lista.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'border rounded-lg p-4 bg-gray-50';
+        const top = document.createElement('div');
+        top.className = 'flex justify-between items-start';
+        const details = document.createElement('div');
+        const title = document.createElement('div');
+        title.className = 'font-medium';
+        title.textContent = String(s.tipo || '') + ' · ' + String(s.localidad || '');
+        const contact = document.createElement('div');
+        contact.className = 'text-sm text-gray-600';
+        contact.textContent = String(s.nombre || '') + ' · ' + String(s.contacto || '');
+        const desc = document.createElement('div');
+        desc.className = 'text-sm mt-1';
+        const fullDesc = String(s.descripcion || '');
+        desc.textContent = fullDesc.slice(0, 120) + (fullDesc.length > 120 ? '...' : '');
+        details.append(title, contact, desc);
+        const select = document.createElement('select');
+        select.className = 'text-sm border rounded px-2 py-1';
+        estados.forEach(e => {
+          const option = document.createElement('option');
+          option.value = e;
+          option.textContent = e;
+          option.selected = e === s.estado;
+          select.appendChild(option);
+        });
+        select.addEventListener('change', () => cambiarEstado(Number(s.id), select.value));
+        top.append(details, select);
+        const date = document.createElement('div');
+        date.className = 'mt-2 text-xs text-gray-500';
+        const parsedDate = new Date(s.fecha);
+        date.textContent = Number.isNaN(parsedDate.getTime()) ? '' : parsedDate.toLocaleString('es-ES');
+        card.append(top, date);
+        container.appendChild(card);
+      });
     }
-
     function cambiarEstado(id, nuevo) {
       const lista = JSON.parse(localStorage.getItem('presubot_solicitudes') || '[]');
       const idx = lista.findIndex(s => s.id === id);
