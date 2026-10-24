@@ -308,11 +308,26 @@
       document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
     }
 
+    function leerSolicitudes() {
+      try {
+        const d = JSON.parse(localStorage.getItem('presubot_solicitudes') || '[]');
+        return Array.isArray(d) ? d.filter(s => s && typeof s === 'object') : [];
+      } catch (e) { return []; }
+    }
+
+    function escribirSolicitudes(lista) {
+      try { localStorage.setItem('presubot_solicitudes', JSON.stringify(lista)); return true; }
+      catch (e) { return false; }
+    }
+
     function guardarEnPanel() {
       if (!currentSolicitud) return;
-      const lista = JSON.parse(localStorage.getItem('presubot_solicitudes') || '[]');
+      const lista = leerSolicitudes();
       lista.unshift({ ...currentSolicitud, id: Date.now() });
-      localStorage.setItem('presubot_solicitudes', JSON.stringify(lista));
+      if (!escribirSolicitudes(lista)) {
+        alert('No se pudo guardar en el navegador');
+        return;
+      }
       renderPanel();
       alert('Guardada en el panel local de demostración.');
       document.getElementById('panel').scrollIntoView({ behavior: 'smooth' });
@@ -325,7 +340,7 @@
     }
 
     function renderPanel() {
-      const lista = JSON.parse(localStorage.getItem('presubot_solicitudes') || '[]');
+      const lista = leerSolicitudes().filter(s => Number.isFinite(Number(s.id)));
       const container = document.getElementById('panelLista');
       const vacio = document.getElementById('panelVacio');
       container.replaceChildren();
@@ -372,11 +387,14 @@
       });
     }
     function cambiarEstado(id, nuevo) {
-      const lista = JSON.parse(localStorage.getItem('presubot_solicitudes') || '[]');
-      const idx = lista.findIndex(s => s.id === id);
+      const lista = leerSolicitudes();
+      const idx = lista.findIndex(s => Number(s.id) === id);
       if (idx >= 0) {
         lista[idx].estado = nuevo;
-        localStorage.setItem('presubot_solicitudes', JSON.stringify(lista));
+        if (!escribirSolicitudes(lista)) {
+          alert('No se pudo guardar en el navegador');
+          return;
+        }
         renderPanel();
       }
     }
