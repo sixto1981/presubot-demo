@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PresuBot — Organiza solicitudes de presupuesto sin perder tiempo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system_ui, sans-serif; }
+    .demo-badge { background: #FEF3C7; color: #92400E; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">P</div>
+        <span class="font-bold text-xl">PresuBot</span>
+        <span class="text-xs demo-badge px-2 py-0.5 rounded-full ml-2">DEMO</span>
+      </div>
+      <nav class="hidden md:flex gap-6 text-sm">
+        <a href="#como-funciona" class="hover:text-blue-600">Cómo funciona</a>
+        <a href="#demo" class="hover:text-blue-600">Probar demo</a>
+        <a href="#precios" class="hover:text-blue-600">Precios</a>
+        <a href="#panel" class="hover:text-blue-600">Panel</a>
+      </nav>
+      <a href="#demo" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">Probar gratis</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="max-w-6xl mx-auto px-4 py-16 md:py-24 text-center">
+    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
+      Recibe y organiza solicitudes de presupuesto<br class="hidden md:block"> sin perder tiempo ni clientes
+    </h1>
+    <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+      PresuBot ayuda a profesionales de reformas, pintura, fontanería, electricidad e instalaciones a captar solicitudes, hacer las preguntas correctas y gestionar cada trabajo desde un solo lugar.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="#demo" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700">Probar la demostración</a>
+      <a href="#precios" class="border border-gray-300 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100">Ver precios</a>
+    </div>
+    <p class="text-sm text-gray-500 mt-4">Demostración local · No envía datos reales · No requiere registro</p>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section id="como-funciona" class="bg-white py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-12">Cómo funciona en 3 pasos</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
+          <h3 class="font-semibold text-lg mb-2">El cliente envía la solicitud</h3>
+          <p class="text-gray-600">Desde tu página o enlace, indica tipo de trabajo, localidad, descripción y fotos opcionales.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+          <h3 class="font-semibold text-lg mb-2">PresuBot aclara lo necesario</h3>
+          <p class="text-gray-600">Formula preguntas concretas según el oficio y genera un resumen estructurado. Tú revisas todo.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
+          <h3 class="font-semibold text-lg mb-2">Gestionas y contactas</h3>
+          <p class="text-gray-600">Cambias el estado, añades notas, preparas la respuesta y organizas la visita o llamada.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo interactiva -->
+  <section id="demo" class="py-16 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-sm text-yellow-800">
+        <strong>Demostración interactiva.</strong> Los datos se procesan solo en tu navegador. No se envían a ningún servidor. No es una integración real de WhatsApp ni de IA externa.
+      </div>
+      <h2 class="text-3xl font-bold mb-2">Prueba el flujo de solicitud</h2>
+      <p class="text-gray-600 mb-8">Introduce datos de ejemplo y ve cómo se generan las preguntas y el resumen.</p>
+
+      <form id="solicitudForm" class="bg-white rounded-xl shadow-sm border p-6 space-y-4">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Tipo de trabajo *</label>
+            <select id="tipo" required class="w-full border rounded-lg px-3 py-2">
+              <option value="">Selecciona</option>
+              <option>Reforma integral</option>
+              <option>Pintura</option>
+              <option>Fontanería</option>
+              <option>Electricidad</option>
+              <option>Instalaciones (aire, calefacción...)</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Localidad *</label>
+            <input type="text" id="localidad" required placeholder="Ej. Madrid, Barcelona, Valencia..." class="w-full border rounded-lg px-3 py-2">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Descripción del trabajo *</label>
+          <textarea id="descripcion" required rows="3" placeholder="Ej. Quiero pintar un piso de 80 m², paredes y techos, color blanco..." class="w-full border rounded-lg px-3 py-2"></textarea>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Medidas aproximadas</label>
+            <input type="text" id="medidas" placeholder="Ej. 80 m², 3 habitaciones..." class="w-full border rounded-lg px-3 py-2">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Nombre de contacto *</label>
+            <input type="text" id="nombre" required placeholder="Tu nombre" class="w-full border rounded-lg px-3 py-2">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Teléfono o email *</label>
+          <input type="text" id="contacto" required placeholder="Teléfono o email" class="w-full border rounded-lg px-3 py-2">
+        </div>
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+          <input type="checkbox" id="fotos" class="rounded">
+          <label for="fotos">Tengo fotos (opcional, no se suben en esta demo)</label>
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700">Generar resumen de solicitud</button>
+      </form>
+
+      <div id="resultado" class="mt-8 hidden">
+        <div class="bg-white rounded-xl shadow-sm border p-6">
+          <h3 class="font-semibold text-lg mb-4">Resumen estructurado</h3>
+          <div id="resumenContenido" class="space-y-3 text-sm"></div>
+          <div id="preguntas" class="mt-6"></div>
+          <div class="mt-6 pt-4 border-t flex gap-3">
+            <button onclick="guardarEnPanel()" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm">Guardar en panel demo</button>
+            <button onclick="resetForm()" class="border px-4 py-2 rounded-lg text-sm">Nueva solicitud</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Panel demo -->
+  <section id="panel" class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-sm text-yellow-800">
+        <strong>Panel de demostración local.</strong> Los datos se guardan solo en el navegador (localStorage) y se pierden al borrar caché. No es un panel multiusuario seguro ni persistente en servidor.
+      </div>
+      <h2 class="text-3xl font-bold mb-6">Panel del profesional (demo)</h2>
+      <div id="panelLista" class="space-y-4"></div>
+      <p id="panelVacio" class="text-gray-500 text-center py-8">Aún no hay solicitudes guardadas. Prueba la demo de arriba.</p>
+    </div>
+  </section>
+
+  <!-- Precios -->
+  <section id="precios" class="py-16 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-4">Precios (hipótesis de prueba)</h2>
+      <p class="text-center text-gray-600 mb-10">Precios orientativos para validar demanda. No se cobra nada en esta demostración.</p>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl border p-6">
+          <h3 class="font-semibold text-lg">Inicial</h3>
+          <p class="text-3xl font-bold my-2">29 €<span class="text-base font-normal text-gray-500">/mes</span></p>
+          <ul class="text-sm space-y-2 text-gray-600 mb-6">
+            <li>✓ Hasta 30 solicitudes/mes</li>
+            <li>✓ Resumen y preguntas IA (demo)</li>
+            <li>✓ Panel básico</li>
+            <li>✓ 1 usuario</li>
+          </ul>
+          <button class="w-full border rounded-lg py-2 text-sm" disabled>Próximamente</button>
+        </div>
+        <div class="bg-white rounded-xl border-2 border-blue-600 p-6 relative">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">Recomendado</span>
+          <h3 class="font-semibold text-lg">Profesional</h3>
+          <p class="text-3xl font-bold my-2">49 €<span class="text-base font-normal text-gray-500">/mes</span></p>
+          <ul class="text-sm space-y-2 text-gray-600 mb-6">
+            <li>✓ Hasta 100 solicitudes/mes</li>
+            <li>✓ Todas las funciones del Inicial</li>
+            <li>✓ Notas y estados avanzados</li>
+            <li>✓ Hasta 3 usuarios</li>
+          </ul>
+          <button class="w-full bg-blue-600 text-white rounded-lg py-2 text-sm" disabled>Próximamente</button>
+        </div>
+        <div class="bg-white rounded-xl border p-6">
+          <h3 class="font-semibold text-lg">Avanzado</h3>
+          <p class="text-3xl font-bold my-2">79 €<span class="text-base font-normal text-gray-500">/mes</span></p>
+          <ul class="text-sm space-y-2 text-gray-600 mb-6">
+            <li>✓ Solicitudes ilimitadas*</li>
+            <li>✓ Funciones adicionales (cuando estén listas)</li>
+            <li>✓ Prioridad en soporte</li>
+            <li>✓ Usuarios ilimitados*</li>
+          </ul>
+          <p class="text-xs text-gray-500">*Sujeto a implementación real</p>
+          <button class="w-full border rounded-lg py-2 text-sm" disabled>Próximamente</button>
+        </div>
+      </div>
+      <p class="text-center text-xs text-gray-500 mt-6">Cancelación en cualquier momento. Sin permanencia. Los precios no incluyen IVA. Funciones de IA y panel son demostrativas en esta versión.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-16 bg-white">
+    <div class="max-w-3xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-8">Preguntas frecuentes</h2>
+      <div class="space-y-4">
+        <details class="border rounded-lg p-4">
+          <summary class="font-medium cursor-pointer">¿Esto envía presupuestos reales o contacta a clientes?</summary>
+          <p class="mt-2 text-sm text-gray-600">No. Esta es una demostración local. No se envían mensajes, no se confirman visitas ni se generan presupuestos exactos. Todo es revisable por el profesional.</p>
+        </details>
+        <details class="border rounded-lg p-4">
+          <summary class="font-medium cursor-pointer">¿Los datos se guardan en la nube?</summary>
+          <p class="mt-2 text-sm text-gray-600">En esta demo, no. Se guardan solo en tu navegador. Una versión comercial futura usaría una base de datos segura con separación de cuentas.</p>
+        </details>
+        <details class="border rounded-lg p-4">
+          <summary class="font-medium cursor-pointer">¿Cuánto cuesta realmente?</summary>
+          <p class="mt-2 text-sm text-gray-600">Los precios mostrados son hipótesis para validar demanda. No se realiza ningún cobro en esta demostración.</p>
+        </details>
+        <details class="border rounded-lg p-4">
+          <summary class="font-medium cursor-pointer">¿Hay integración con WhatsApp?</summary>
+          <p class="mt-2 text-sm text-gray-600">No está activa ni disponible. Se preparará para una futura integración oficial con WhatsApp Business Platform cuando existan credenciales, permisos y pruebas reales.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-300 py-10 text-sm">
+    <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-3 gap-8">
+      <div>
+        <div class="font-bold text-white mb-2">PresuBot</div>
+        <p>Demostración de producto. No es un servicio operativo completo.</p>
+      </div>
+      <div>
+        <div class="font-semibold text-white mb-2">Legal (borradores)</div>
+        <a href="legal.html" class="block hover:text-white">Política de privacidad y condiciones (borrador)</a>
+      </div>
+      <div>
+        <div class="font-semibold text-white mb-2">Contacto</div>
+        <p>Responsable: [NOMBRE / NIF / DOMICILIO — a completar]</p>
+        <p class="mt-2 text-xs">Esta demostración no constituye oferta comercial vinculante.</p>
+      </div>
+    </div>
+    <div class="text-center text-xs mt-8 text-gray-500">© 2026 PresuBot · Versión de demostración</div>
+  </footer>
+
+  <script>
+    // Demo logic
+    let currentSolicitud = null;
+
+    document.getElementById('solicitudForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const data = {
+        tipo: document.getElementById('tipo').value,
+        localidad: document.getElementById('localidad').value,
+        descripcion: document.getElementById('descripcion').value,
+        medidas: document.getElementById('medidas').value,
+        nombre: document.getElementById('nombre').value,
+        contacto: document.getElementById('contacto').value,
+        fotos: document.getElementById('fotos').checked,
+        fecha: new Date().toISOString(),
+        estado: 'nueva'
+      };
+      currentSolicitud = data;
+      generarResumen(data);
+    });
+
+    function generarResumen(data) {
+      const preguntas = [];
+      const desc = (data.descripcion + ' ' + data.medidas).toLowerCase();
+
+      if (data.tipo.includes('Pintura') || desc.includes('pint')) {
+        if (!desc.includes('m²') && !data.medidas) preguntas.push('¿Cuántos metros cuadrados aproximados hay que pintar?');
+        if (!desc.includes('habitac') && !desc.includes('estancia')) preguntas.push('¿Cuántas habitaciones o estancias?');
+        preguntas.push('¿Las paredes necesitan preparación previa (arreglar grietas, lijar, etc.)?');
+      }
+      if (data.tipo.includes('Fontanería') || desc.includes('fontan') || desc.includes('grifo') || desc.includes('tuber')) {
+        preguntas.push('¿Es una avería, una instalación nueva o un cambio de sanitarios?');
+        preguntas.push('¿Hay que romper suelo o pared?');
+      }
+      if (data.tipo.includes('Electricidad') || desc.includes('electr') || desc.includes('punto de luz')) {
+        preguntas.push('¿Necesitas nuevos puntos de luz, enchufes o un cuadro eléctrico?');
+      }
+      if (preguntas.length === 0) {
+        preguntas.push('¿Hay alguna fecha preferida para la visita o llamada?');
+        preguntas.push('¿El acceso al inmueble es fácil?');
+      }
+
+      let html = `
+        <div><strong>Tipo:</strong> ${data.tipo}</div>
+        <div><strong>Localidad:</strong> ${data.localidad}</div>
+        <div><strong>Descripción:</strong> ${data.descripcion}</div>
+        ${data.medidas ? `<div><strong>Medidas:</strong> ${data.medidas}</div>` : ''}
+        <div><strong>Contacto:</strong> ${data.nombre} · ${data.contacto}</div>
+        <div class="text-xs text-gray-500 mt-2">Datos ficticios de demostración. No se ha enviado nada.</div>
+      `;
+      document.getElementById('resumenContenido').innerHTML = html;
+
+      let pregHtml = '<h4 class="font-medium mb-2">Preguntas para aclarar (revisables):</h4><ul class="list-disc list-inside space-y-1 text-sm">';
+      preguntas.forEach(p => pregHtml += `<li>${p}</li>`);
+      pregHtml += '</ul><p class="text-xs text-gray-500 mt-2">Estas preguntas se generan de forma determinista según el texto. En una versión real se usaría IA revisable.</p>';
+      document.getElementById('preguntas').innerHTML = pregHtml;
+
+      document.getElementById('resultado').classList.remove('hidden');
+      document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function guardarEnPanel() {
+      if (!currentSolicitud) return;
+      const lista = JSON.parse(localStorage.getItem('presubot_solicitudes') || '[]');
+      lista.unshift({ ...currentSolicitud, id: Date.now() });
+      localStorage.setItem('presubot_solicitudes', JSON.stringify(lista));
+      renderPanel();
+      alert('Guardada en el panel local de demostración.');
+      document.getElementById('panel').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetForm() {
+      document.getElementById('solicitudForm').reset();
+      document.getElementById('resultado').classList.add('hidden');
+      currentSolicitud = null;
+    }
+
+    function renderPanel() {
+      const lista = JSON.parse(localStorage.getItem('presubot_solicitudes') || '[]');
+      const container = document.getElementById('panelLista');
+      const vacio = document.getElementById('panelVacio');
+      if (lista.length === 0) {
+        container.innerHTML = '';
+        vacio.classList.remove('hidden');
+        return;
+      }
+      vacio.classList.add('hidden');
+      container.innerHTML = lista.map(s => `
+        <div class="border rounded-lg p-4 bg-gray-50">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="font-medium">${s.tipo} · ${s.localidad}</div>
+              <div class="text-sm text-gray-600">${s.nombre} · ${s.contacto}</div>
+              <div class="text-sm mt-1">${s.descripcion.substring(0, 120)}${s.descripcion.length > 120 ? '...' : ''}</div>
+            </div>
+            <select onchange="cambiarEstado(${s.id}, this.value)" class="text-sm border rounded px-2 py-1">
+              ${['nueva','pendiente de información','contactar','visita pendiente','presupuesto enviado','ganada','perdida'].map(e => 
+                `<option ${e === s.estado ? 'selected' : ''}>${e}</option>`).join('')}
+            </select>
+          </div>
+          <div class="mt-2 text-xs text-gray-500">${new Date(s.fecha).toLocaleString('es-ES')}</div>
+        </div>
+      `).join('');
+    }
+
+    function cambiarEstado(id, nuevo) {
+      const lista = JSON.parse(localStorage.getItem('presubot_solicitudes') || '[]');
+      const idx = lista.findIndex(s => s.id === id);
+      if (idx >= 0) {
+        lista[idx].estado = nuevo;
+        localStorage.setItem('presubot_solicitudes', JSON.stringify(lista));
+        renderPanel();
+      }
+    }
+
+    // Init
+    renderPanel();
+  </script>
+</body>
+</html>
